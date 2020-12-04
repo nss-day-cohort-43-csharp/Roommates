@@ -29,7 +29,13 @@ namespace Roommates43
                         ShowOneRoom(roomRepo);
                         break;
                     case ("Add a room"):
-                        // Do stuff
+                        InsertRoom(roomRepo);
+                        break;
+                    case ("Update a room"):
+                        UpdateRoom(roomRepo);
+                        break;
+                    case ("Delete a room"):
+                        DeleteRoom(roomRepo);
                         break;
                     case ("Exit"):
                         runProgram = false;
@@ -39,6 +45,67 @@ namespace Roommates43
 
         }
 
+        static void UpdateRoom(RoomRepository roomRepo)
+        {
+            roomRepo.GetAll().ForEach(r => Console.WriteLine($"[{r.Id}] {r.Name}"));
+            
+            Console.WriteLine();
+            Console.Write("What is the ID of the room you want to delete? ");
+
+            int roomId = int.Parse(Console.ReadLine());
+
+            Console.Write("Name: ");
+            string newName = Console.ReadLine();
+
+            Console.Write("Max Occupancy: ");
+            int newMax = int.Parse(Console.ReadLine());
+
+            Room updatedRoom = new Room()
+            {
+                Id = roomId,
+                Name = newName,
+                MaxOccupancy = newMax
+            };
+
+            roomRepo.Update(updatedRoom);
+            Console.Write("Room has been successfully updated. Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void DeleteRoom(RoomRepository roomRepo)
+        {
+            roomRepo.GetAll().ForEach(r => Console.WriteLine($"[{r.Id}] {r.Name}"));
+
+            Console.WriteLine();
+            Console.Write("What is the ID of the room you want to delete? ");
+
+            int roomId = int.Parse(Console.ReadLine());
+            roomRepo.Delete(roomId);
+
+            Console.Write("Room has been successfully removed. Press any key to continue...");
+            Console.ReadKey();
+        }
+
+        static void InsertRoom(RoomRepository roomRepo)
+        {
+            Console.Write("Room Name: ");
+            string name = Console.ReadLine();
+
+            Console.Write("Max Occupancy: ");
+            int max = int.Parse(Console.ReadLine());
+
+            Room room = new Room()
+            {
+                Name = name,
+                MaxOccupancy = max
+            };
+
+            roomRepo.Insert(room);
+
+            Console.WriteLine($"{room.Name} has been added to the database and given the ID of {room.Id}");
+            Console.ReadKey();
+        }
+
         static void ShowAllRooms(RoomRepository roomRepo)
         {
             List<Room> rooms = roomRepo.GetAll();
@@ -46,7 +113,7 @@ namespace Roommates43
             {
                 Console.WriteLine($"[{r.Id}] {r.Name} Max Occ({r.MaxOccupancy})");
             }
-            Console.Write("Press any key to continue");
+            Console.Write("Press any key to continue...");
             Console.ReadKey();
         }
 
@@ -58,7 +125,7 @@ namespace Roommates43
             Room room = roomRepo.GetById(id);
 
             Console.WriteLine($"{room.Id} - {room.Name} Max Occupancy({room.MaxOccupancy})");
-            Console.Write("Press any key to continue");
+            Console.Write("Press any key to continue...");
             Console.ReadKey();
         }
 
@@ -71,6 +138,8 @@ namespace Roommates43
             "Show all rooms",
             "Search for room",
             "Add a room",
+            "Update a room",
+            "Delete a room",
             "Exit"
         };
 
